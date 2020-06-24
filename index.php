@@ -12,3 +12,4 @@
 $pluginPath = plugin_dir_path(__FILE__);
 include($pluginPath . 'lib/wp-admin/index.php');
 include($pluginPath . 'lib/shortcode/index.php');
+include($pluginPath . 'lib/api/index.php');
