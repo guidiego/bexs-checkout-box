@@ -37,7 +37,7 @@
     {
         $baseAttrs = [
             'value' => 0,
-            'max_installments' => (int) bcb_get_default_max_installments(),
+            'max_installments' => (int) bcb_get_api_prop('default_max_installments'),
         ];
 
         $product = new BCBPayment(array_merge($baseAttrs, $attrs));

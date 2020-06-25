@@ -164,7 +164,7 @@
                 };
 
                 const onSuccess = () => {
-                    window.location.href = "<?= bcb_get_redirect_url() ?>"
+                    window.location.href = "<?= bcb_get_api_prop('redirect_url') ?>"
                 }
 
                 fetch('/?rest_route/bexs-checkout/v1/pay', options)

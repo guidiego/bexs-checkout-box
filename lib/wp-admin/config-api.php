@@ -27,14 +27,9 @@
         echo __( 'Você pode resgatar seu token de API aqui:', 'wordpress' );
     }
 
-    function bcb_get_redirect_url()
+    function bcb_get_api_prop($name)
     {
-        return bcb_get_option('bcb_api', 'redirect_url');
-    }
-
-    function bcb_get_default_max_installments()
-    {
-        return bcb_get_option('bcb_api', 'default_max_installments');
+        return bcb_get_option('bcb_api', $name);
     }
 
     function bcb_api_options_page()
