@@ -4,7 +4,7 @@
         return bcb_create_init(
             'bcbApiPlugin',
             'bcb_api',
-            'Bexs API Configuration',
+            'Checkout Configuration',
             [
                 [
                     'name' => 'auth_token',

@@ -3,59 +3,59 @@
         return bcb_create_init(
             'bcbStylePlugin',
             'bcb_style',
-            'Bexs Styles Configuration',
+            'Component Style',
             [
                 [
                     'name' => 'ipt_class',
-                    'label' => 'Classes adicionada ao input',
+                    'label' => 'CSS class to be added on input',
                 ],
                 [
                     'name' => 'title_class',
-                    'label' => 'Classe adicionada ao titulo',
+                    'label' => 'CSS class to be added on title',
                 ],
                 [
                     'name' => 'desc_class',
-                    'label' => 'Classe adicionada a descrição',
+                    'label' => 'CSS class to be added on description',
                 ],
                 [
                     'name' => 'box_class',
-                    'label' => 'Classe adicionada ao Box',
+                    'label' => 'CSS class to be added on Box',
                 ],
                 [
                     'name' => 'btn_class',
-                    'label' => 'Classe adiconada ao botão',
+                    'label' => 'CSS class to be added on Button',
                 ],
                 [
                     'name' => 'btn_text',
-                    'label' => 'Texto do Botão',
-                    'default' => 'Finalizar Compra',
+                    'label' => 'Button Text',
+                    'default' => 'Finish Payment',
                 ],
                 [
                     'name' => 'cardnumber_placeholder',
-                    'label' => 'Placeholder do cardnumber',
-                    'default' => 'Número do Cartão de Crédito',
+                    'label' => "cardnumber's field placeholder",
+                    'default' => 'Credit Card Number',
                 ],
                 [
                     'name' => 'name_placeholder',
-                    'label' => 'Placeholder do name',
-                    'default' => 'Nome',
+                    'label' => "name's field placeholder",
+                    'default' => 'Name in Credit Card',
                 ],
                 [
                     'name' => 'exp_placeholder',
-                    'label' => 'Placeholder do exp',
-                    'default' => 'Data de Vencimento',
+                    'label' => "exp's field placeholder",
+                    'default' => 'Expire Date',
                 ],
                 [
                     'name' => 'cvv_placeholder',
-                    'label' => 'Placeholder do cvv',
-                    'default' => 'Código de Segurança',
+                    'label' => "cvv's field placeholder",
+                    'default' => 'Security Code',
                 ],
             ]
         );
     }
 
     function bcb_style_section_callback(  ) {
-        echo __( 'Aqui você pode configurar os estilos do seu Checkout', 'wordpress' );
+        echo __( 'Here you are able to change all Box texts, mode and add CSS classes', 'wordpress' );
     }
 
     function bcb_get_style_prop($name) {
