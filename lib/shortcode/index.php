@@ -1,11 +1,18 @@
 <?php
-    class BCBProduct {
+    class BCBPayment {
         function __construct($attr)
         {
-            $this->value = (float) $attr['value'];
+            $value = (float) $attr['value'];
+
+            if (isset($attr['tax'])) {
+                $this->tax = (float) $attr['tax'];
+                $value += $this->tax;
+            }
+
+            $this->value = $value;
             $this->maxInstallments = (int) $attr['max_installments'];
-            $this->name = $attr['product_name'];
-            $this->description = $attr['product_description'];
+            $this->title = $attr['title'];
+            $this->description = $attr['description'];
             $this->installmentObj = $this->generateInstallments();
         }
 
@@ -33,7 +40,7 @@
             'max_installments' => (int) bcb_get_default_max_installments(),
         ];
 
-        $product = new BCBProduct(array_merge($baseAttrs, $attrs));
+        $product = new BCBPayment(array_merge($baseAttrs, $attrs));
 
         if (isset($product)) {
             include('form.php');

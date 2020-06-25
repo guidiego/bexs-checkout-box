@@ -92,7 +92,7 @@
 <?php $inputClass = 'bpc-form-input ' . bcb_get_style_prop('desc_class') ?>
 <form class="bpc-form <?= bcb_get_style_prop('box_class') ?>">
     <h3 class="bpc-form-title <?= bcb_get_style_prop('title_class') ?>">
-        <?= $product->name ?>
+        <?= $product->title ?>
     </h3>
     <div class="bpc-form-description <?= bcb_get_style_prop('desc_class') ?>">
         <?= $product->description ?>
@@ -128,7 +128,7 @@
         </label>
     </div>
     <button type="submit" class="bpc-form-btn <?= bcb_get_style_prop('btn_class') ?>">
-        Finalizar Compra
+        <?= bcb_get_style_prop('btn_text') ?>
     </button>
 </form>
 
