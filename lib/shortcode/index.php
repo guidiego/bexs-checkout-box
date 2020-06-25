@@ -30,7 +30,7 @@
     {
         $baseAttrs = [
             'value' => 0,
-            'max_installments' => 5,
+            'max_installments' => (int) bcb_get_default_max_installments(),
         ];
 
         $product = new BCBProduct(array_merge($baseAttrs, $attrs));
