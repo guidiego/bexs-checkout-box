@@ -26,6 +26,11 @@
                     'label' => 'Classe adiconada ao botão',
                 ],
                 [
+                    'name' => 'btn_text',
+                    'label' => 'Texto do Botão',
+                    'default' => 'Finalizar Compra',
+                ],
+                [
                     'name' => 'cardnumber_placeholder',
                     'label' => 'Placeholder do cardnumber',
                     'default' => 'Número do Cartão de Crédito',
