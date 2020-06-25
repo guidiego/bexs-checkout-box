@@ -29,12 +29,12 @@
 
     function bcb_get_redirect_url()
     {
-        return bcb_get_option('bcb_api', 'redirect_url', '');
+        return bcb_get_option('bcb_api', 'redirect_url');
     }
 
     function bcb_get_default_max_installments()
     {
-        return bcb_get_option('bcb_api', 'default_max_installments', '1');
+        return bcb_get_option('bcb_api', 'default_max_installments');
     }
 
     function bcb_api_options_page()

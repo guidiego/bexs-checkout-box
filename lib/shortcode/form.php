@@ -89,26 +89,32 @@
     }
 </style>
 
-<form class="bpc-form">
-    <h3 class="bpc-form-title"> <?= $product->name ?> </h3>
-    <label class="bpc-form-input">
+<?php $inputClass = 'bpc-form-input ' . bcb_get_style_prop('desc_class') ?>
+<form class="bpc-form <?= bcb_get_style_prop('box_class') ?>">
+    <h3 class="bpc-form-title <?= bcb_get_style_prop('title_class') ?>">
+        <?= $product->name ?>
+    </h3>
+    <div class="bpc-form-description <?= bcb_get_style_prop('desc_class') ?>">
+        <?= $product->description ?>
+    </div>
+    <label class="<?= $inputClass ?>">
         <span>Número do Cartão de Crédito</span>
-        <input placeholder="Número do Cartão de Crédito" name="cardnumber" autocomplete="cc-number">
+        <input placeholder="<?= bcb_get_style_prop('cardnumber_placeholder') ?>" name="cardnumber" autocomplete="cc-number">
     </label>
-    <label class="bpc-form-input">
+    <label class="<?= $inputClass ?>">
         <span>Nome</span>
-        <input placeholder="Nome" name="ccname" autocomplete="cc-name">
+        <input placeholder="<?= bcb_get_style_prop('name_placeholder') ?>" name="ccname" autocomplete="cc-name">
     </label>
     <div class="bcp-row">
-        <label class="bpc-form-input input-datev">
+        <label class="<?= $inputClass ?> input-datev">
             <span>Data de Vencimento</span>
-            <input placeholder="Data de Vencimento" name="cc-exp" autocomplete="cc-exp">
+            <input placeholder="<?= bcb_get_style_prop('exp_placeholder') ?>" name="cc-exp" autocomplete="cc-exp">
         </label>
-        <label class="bpc-form-input input-cv">
+        <label class="<?= $inputClass ?> input-cv">
             <span>Código de Segurança</span>
-            <input placeholder="Código de Segurança" name="cvc" autocomplete="cc-csc">
+            <input placeholder="<?= bcb_get_style_prop('cvv_placeholder') ?>" name="cvc" autocomplete="cc-csc">
         </label>
-        <label class="bpc-form-input input-installments">
+        <label class="<?= $inputClass ?> input-installments">
             <select name="installments">
                 <?php
                     foreach ($product->installmentObj as $installment) { ?>
@@ -121,7 +127,7 @@
             </div>
         </label>
     </div>
-    <button type="submit" class="bpc-form-btn">
+    <button type="submit" class="bpc-form-btn <?= bcb_get_style_prop('btn_class') ?>">
         Finalizar Compra
     </button>
 </form>
