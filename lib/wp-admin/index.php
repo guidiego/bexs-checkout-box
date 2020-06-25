@@ -50,7 +50,7 @@
             add_settings_field(
                 $pluginSlug . '_' . $field['name'],
                 __($field['label'], 'wordpress' ),
-                $pluginSlug . '_' . $field['name'] . '_render',
+                bcb_create_text_input($pluginSlug, $field['name']),
                 $pluginName,
                 $pluginSlug . '_' . $pluginName . '_section'
             );
@@ -72,12 +72,14 @@
 
     function bcb_create_text_input($pluginSlug, $fieldName)
     {
-        $options = get_option($pluginSlug);
-        $fieldTotalName = $pluginSlug . '_' . $fieldName;
-        $fieldPropName = $pluginSlug . "[" . $fieldTotalName . "]";
-        $val = $options[$fieldTotalName];
-        $inputString = "<input type='text' name='$fieldPropName' value='$val' />";
-        echo $inputString;
+        return function () use ($pluginSlug, $fieldName) {
+            $options = get_option($pluginSlug);
+            $fieldTotalName = $pluginSlug . '_' . $fieldName;
+            $fieldPropName = $pluginSlug . "[" . $fieldTotalName . "]";
+            $val = $options[$fieldTotalName];
+            $inputString = "<input type='text' name='$fieldPropName' value='$val' />";
+            echo $inputString;
+        };
     }
 
     include('config-api.php');

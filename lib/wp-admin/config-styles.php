@@ -13,10 +13,6 @@
         );
     }
 
-    function bcb_style_some_class_render() {
-        echo bcb_create_text_input('bcb_style', 'some_class');
-    }
-
     function bcb_style_section_callback(  ) {
         echo __( 'Aqui você pode configurar os estilos do seu Checkout', 'wordpress' );
     }

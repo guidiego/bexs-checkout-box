@@ -22,21 +22,6 @@
         );
     }
 
-    function bcb_api_auth_token_render()
-    {
-        echo bcb_create_text_input('bcb_api', 'auth_token');
-    }
-
-    function bcb_api_default_max_installments_render()
-    {
-        echo bcb_create_text_input('bcb_api', 'default_max_installments');
-    }
-
-    function bcb_api_redirect_url_render()
-    {
-        echo bcb_create_text_input('bcb_api', 'redirect_url');
-    }
-
     function bcb_api_section_callback(  ) {
         echo __( 'Você pode resgatar seu token de API aqui:', 'wordpress' );
     }
