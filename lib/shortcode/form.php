@@ -157,8 +157,12 @@
                     },
                 };
 
+                const onSuccess = () => {
+                    window.location.href = "<?= bcb_get_redirect_url() ?>"
+                }
+
                 fetch('/?rest_route/bexs-checkout/v1/pay', options)
-                    .then(() => console.log('ALO'))
+                    .then(onSuccess)
                     .catch(() => btn.classList.toggle(loadClass))
             }
         });

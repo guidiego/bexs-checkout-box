@@ -57,6 +57,11 @@
         }
     }
 
+    function bcb_get_option($pluginSlug, $key) {
+        $options = get_option($pluginSlug);
+        return $options[$pluginSlug . '_' . $key];
+    }
+
     function bcb_create_text_input($pluginSlug, $fieldName)
     {
         $options = get_option($pluginSlug);
