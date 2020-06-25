@@ -17,6 +17,7 @@
                 [
                     'name' => 'default_max_installments',
                     'label' => 'Default Max Installments',
+                    'default' => '5',
                 ],
             ]
         );

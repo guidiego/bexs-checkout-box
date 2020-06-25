@@ -47,13 +47,24 @@
 
         foreach ($pluginFields as $field)
         {
+            $optName = $pluginSlug . '_' . $field['name'];
             add_settings_field(
-                $pluginSlug . '_' . $field['name'],
+                $optName,
                 __($field['label'], 'wordpress' ),
                 bcb_create_text_input($pluginSlug, $field['name']),
                 $pluginName,
                 $pluginSlug . '_' . $pluginName . '_section'
             );
+
+            if (array_key_exists("default", $field) && empty($_POST)) {
+                $options = get_option($pluginSlug);
+
+                if (!$options[$optName]) {
+                    $options[$optName] = $field['default'];
+                }
+
+                update_option($pluginSlug, $options);
+            }
         }
     }
 
