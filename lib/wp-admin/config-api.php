@@ -7,8 +7,17 @@
             'Checkout Configuration',
             [
                 [
-                    'name' => 'auth_token',
-                    'label' => 'Bexs Authorization Token',
+                    'name' => 'client_id',
+                    'label' => 'Bexs ClientID',
+                ],
+                [
+                    'name' => 'client_secret',
+                    'label' => 'Bexs Client Secret',
+                ],
+                [
+                    'name' => 'bexs_api_url',
+                    'label' => 'Bexs Client API',
+                    'default' => 'https://sandbox.bexs.com.br/v1',
                 ],
                 [
                     'name' => 'redirect_url',

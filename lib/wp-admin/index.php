@@ -3,6 +3,7 @@
     {
         add_menu_page( 'Bexs Checkout Box', 'Bexs Checkout ', 'manage_options', 'bex-checkout', 'bcb_api_options_page', 'dashicons-cart');
         add_submenu_page('bex-checkout', 'Component Styles', 'Component Styles', 'manage_options', 'component-styles', 'bcb_style_options_page');
+        add_submenu_page('bex-checkout', 'Payment History', 'Payment History', 'manage_options', 'payment-history', 'bexsPaymentPage' );
     }
 
     function bcb_create_options_page($pluginName)
@@ -86,8 +87,10 @@
         };
     }
 
-    include('config-api.php');
-    include('config-styles.php');
+    include_once('config-api.php');
+    include_once('config-styles.php');
+    include_once('bexs-payments.php');
+
     add_action( 'admin_menu', 'bcb_admin_menu_setup' );
     add_action( 'admin_init', 'bcb_api_init' );
     add_action( 'admin_init', 'bcb_style_init' );

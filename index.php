@@ -9,7 +9,14 @@
     License: MIT License
  */
 
+if (!defined('ABSPATH')) {
+    define('ABSPATH', dirname(__FILE__) . '/');
+}
+
 $pluginPath = plugin_dir_path(__FILE__);
-include($pluginPath . 'lib/wp-admin/index.php');
-include($pluginPath . 'lib/shortcode/index.php');
-include($pluginPath . 'lib/api/index.php');
+include_once($pluginPath . 'lib/wp-admin/index.php');
+include_once($pluginPath . 'lib/shortcode/index.php');
+include_once($pluginPath . 'lib/api/index.php');
+
+register_activation_hook(__FILE__, 'bcbCreateTable');
+register_deactivation_hook(__FILE__, 'bcbDropTable');

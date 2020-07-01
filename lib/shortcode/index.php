@@ -40,9 +40,9 @@
             'max_installments' => (int) bcb_get_api_prop('default_max_installments'),
         ];
 
-        $product = new BCBPayment(array_merge($baseAttrs, $attrs));
+        $payment = new BCBPayment(array_merge($baseAttrs, $attrs));
 
-        if (isset($product)) {
+        if (isset($payment)) {
             include('form.php');
         }
     }

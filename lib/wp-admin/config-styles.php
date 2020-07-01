@@ -31,6 +31,16 @@
                     'default' => 'Finish Payment',
                 ],
                 [
+                    'name' => 'email_placeholder',
+                    'label' => "email's field placeholder",
+                    'default' => 'Email',
+                ],
+                [
+                    'name' => 'national_id_placeholder',
+                    'label' => "nationalId's field placeholder",
+                    'default' => 'National ID',
+                ],
+                [
                     'name' => 'cardnumber_placeholder',
                     'label' => "cardnumber's field placeholder",
                     'default' => 'Credit Card Number',

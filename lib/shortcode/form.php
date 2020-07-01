@@ -92,11 +92,19 @@
 <?php $inputClass = 'bpc-form-input ' . bcb_get_style_prop('desc_class') ?>
 <form class="bpc-form <?= bcb_get_style_prop('box_class') ?>">
     <h3 class="bpc-form-title <?= bcb_get_style_prop('title_class') ?>">
-        <?= $product->title ?>
+        <?= $payment->title ?>
     </h3>
     <div class="bpc-form-description <?= bcb_get_style_prop('desc_class') ?>">
-        <?= $product->description ?>
+        <?= $payment->description ?>
     </div>
+    <label class="<?= $inputClass ?>">
+        <span><?= bcb_get_style_prop('email_placeholder') ?></span>
+        <input placeholder="<?= bcb_get_style_prop('email_placeholder') ?>" name="email" autocomplete="email">
+    </label>
+    <label class="<?= $inputClass ?>">
+        <span><?= bcb_get_style_prop('national_id_placeholder') ?></span>
+        <input placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id">
+    </label>
     <label class="<?= $inputClass ?>">
         <span>Número do Cartão de Crédito</span>
         <input placeholder="<?= bcb_get_style_prop('cardnumber_placeholder') ?>" name="cardnumber" autocomplete="cc-number">
@@ -114,16 +122,17 @@
             <span>Código de Segurança</span>
             <input placeholder="<?= bcb_get_style_prop('cvv_placeholder') ?>" name="cvc" autocomplete="cc-csc">
         </label>
+        <input type="hidden" name="value" value="<?= $payment->value ?>">
         <label class="<?= $inputClass ?> input-installments">
             <select name="installments">
                 <?php
-                    foreach ($product->installmentObj as $installment) { ?>
+                    foreach ($payment->installmentObj as $installment) { ?>
                         <option value="<?=$installment['value']?>"><?=$installment['label']?></option>
                     <?php }
                 ?>
             </select>
             <div class="bpc-fake-select">
-                <?= $product->installmentObj[0]['label'] ?>
+                <?= $payment->installmentObj[0]['label'] ?>
             </div>
         </label>
     </div>
@@ -144,7 +153,7 @@
                 .reduce((prev, el) => ({
                     ...prev, [el.name]: el.value,
                 }), {
-                    "value":  "<?= $product->value ?>",
+                    "value":  "<?= $payment->value ?>",
                 });
 
             if (btn.classList.contains(loadClass)) {
@@ -159,15 +168,17 @@
                     body: JSON.stringify(form),
                     credentials: 'same-origin',
                     headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
                 };
 
-                const onSuccess = () => {
+                const onSuccess = (d) => {
                     window.location.href = "<?= bcb_get_api_prop('redirect_url') ?>"
                 }
 
-                fetch('/?rest_route/bexs-checkout/v1/pay', options)
+                fetch('/?rest_route=/bexs-checkout/v1/pay', options)
+                    .then((response) => response.json())
                     .then(onSuccess)
                     .catch(() => btn.classList.toggle(loadClass))
             }
