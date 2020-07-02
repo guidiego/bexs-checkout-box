@@ -60,14 +60,67 @@ function bexsPaymentPage()
     $dbName = $wpdb->prefix . 'bexs_payments';
     $pageLimit = 20;
     $pageSkip = 0;
-    $dbQuery = "SELECT * FROM $dbName SKIP $pageSkip LIMIT $pageLimit";
+    $dbQuery = "SELECT * FROM $dbName LIMIT 10";
     $rows = $wpdb->get_results($dbQuery);
 
     ?>
-    <div>
-        <h2> Aaaa </h2>
-        <?php print_r($rows) ?>
-    </div>
+        <style>
+            .bcb-table {
+                box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+                color: rgba(0, 0, 0, 0.87);
+                background-color: #fff;
+                border-radius: 4px;
+                margin-top: 20px;
+                border-spacing: 0;
+                border-collapse: collapse;
+            }
+
+            .bcb-table tr {
+                border-bottom: 1px solid rgba(125, 125, 125, .4);
+            }
+
+            .bcb-table tbody tr {
+                border-bottom: 1px solid rgba(125, 125, 125, .2);
+            }
+
+            .bcb-table th,
+            .bcb-table td {
+                padding: 10px 20px;
+                text-align: center;
+            }
+        </style>
+        <table class="bcb-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>BexsID</th>
+                    <th>Timestamp</th>
+                    <th>Value</th>
+                    <th>Installments</th>
+                    <th>Consumer Email</th>
+                    <th>Consumer Name</th>
+                    <!-- <th>National ID</th> -->
+                    <th>Last Digits</th>
+                    <th>Exp Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($rows as $payment) { ?>
+                    <tr>
+                        <td><?= $payment->id ?></td>
+                        <td><?= $payment->bexs_id ?></td>
+                        <td><?= $payment->tmstp ?></td>
+                        <td><?= $payment->value ?></td>
+                        <td><?= $payment->installments ?></td>
+                        <td><?= $payment->email ?></td>
+                        <td><?= $payment->name ?></td>
+                        <!-- <td><?= $payment->national_id ?></td> -->
+                        <td><?= $payment->last_cc_number ?></td>
+                        <td><?= $payment->exp_date ?></td>
+                    <tr>
+                <?php } ?>
+            </tbody>
+        </table>
     <?php
 }
 
