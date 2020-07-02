@@ -123,8 +123,3 @@ function bexsPaymentPage()
         </table>
     <?php
 }
-
-// function getPayments()
-// {
-//     $dbName = $wpdb->prefix . 'bexs_payments';
-// }

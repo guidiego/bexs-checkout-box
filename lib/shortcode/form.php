@@ -99,15 +99,15 @@
     </div>
     <label class="<?= $inputClass ?>">
         <span><?= bcb_get_style_prop('email_placeholder') ?></span>
-        <input placeholder="<?= bcb_get_style_prop('email_placeholder') ?>" name="email" autocomplete="email">
+        <input placeholder="<?= bcb_get_style_prop('email_placeholder') ?>" name="email" autocomplete="email" type="email">
     </label>
     <label class="<?= $inputClass ?>">
         <span><?= bcb_get_style_prop('national_id_placeholder') ?></span>
-        <input placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id">
+        <input placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id" data-mask="^[1-6]\d{0,12}$" data-regex>
     </label>
     <label class="<?= $inputClass ?>">
         <span>Número do Cartão de Crédito</span>
-        <input placeholder="<?= bcb_get_style_prop('cardnumber_placeholder') ?>" name="cardnumber" autocomplete="cc-number">
+        <input placeholder="<?= bcb_get_style_prop('cardnumber_placeholder') ?>" name="cardnumber" autocomplete="cc-number" data-mask="0000 0000 0000 0000">
     </label>
     <label class="<?= $inputClass ?>">
         <span>Nome</span>
@@ -116,11 +116,11 @@
     <div class="bcp-row">
         <label class="<?= $inputClass ?> input-datev">
             <span>Data de Vencimento</span>
-            <input placeholder="<?= bcb_get_style_prop('exp_placeholder') ?>" name="cc-exp" autocomplete="cc-exp">
+            <input placeholder="<?= bcb_get_style_prop('exp_placeholder') ?>" name="cc-exp" autocomplete="cc-exp" data-mask="00/00" >
         </label>
         <label class="<?= $inputClass ?> input-cv">
             <span>Código de Segurança</span>
-            <input placeholder="<?= bcb_get_style_prop('cvv_placeholder') ?>" name="cvc" autocomplete="cc-csc">
+            <input placeholder="<?= bcb_get_style_prop('cvv_placeholder') ?>" name="cvc" autocomplete="cc-csc" data-mask="^[0-9]\d{0,3}$" data-regex>
         </label>
         <input type="hidden" name="value" value="<?= $payment->value ?>">
         <label class="<?= $inputClass ?> input-installments">
@@ -141,8 +141,18 @@
     </button>
 </form>
 
+<script src="https://unpkg.com/imask"></script>
 <script>
     document.body.onload = function () {
+        document.querySelectorAll('[data-mask]').forEach((el) => {
+            const mask = el.dataset.regex !== "" ? el.dataset.mask : new RegExp(el.dataset.mask);
+            IMask(el, { mask });
+        });
+
+        document.querySelector('.input-installments > select').onchange = function () {
+            const opt = this.querySelector(`option[value="${this.value}"]`);
+            document.querySelector('.bpc-fake-select').textContent = opt.textContent;
+        }
 
         document.querySelector('.bpc-form').addEventListener('submit', function (e) {
             e.preventDefault();
