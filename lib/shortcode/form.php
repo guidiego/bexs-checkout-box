@@ -103,7 +103,7 @@
     </label>
     <label class="<?= $inputClass ?>">
         <span><?= bcb_get_style_prop('national_id_placeholder') ?></span>
-        <input placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id" data-mask="^[1-6]\d{0,12}$" data-regex>
+        <input placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id" data-mask="^[0-9]\d{0,12}$" data-regex>
     </label>
     <label class="<?= $inputClass ?>">
         <span>Número do Cartão de Crédito</span>

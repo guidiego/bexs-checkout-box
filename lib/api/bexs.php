@@ -56,7 +56,8 @@ class BexsAPI {
 
     function createPayment($value, $installments, $consumer, $creditCard)
     {
-        $amountKey = 'foreign_amount';
+        $amountKind = bcb_get_api_prop('amount_kind');
+        $amountKey = $amountKind == 'foreign' ? 'foreign_amount' : 'amount';
         $data = [
             'type' => 'CREDIT_CARD',
             'card_info' => $creditCard,

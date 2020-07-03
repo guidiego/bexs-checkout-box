@@ -18,13 +18,14 @@
 
         function generateInstallments()
         {
+            $prefix = bcb_get_api_prop('coin_kind');
             $installments = range(1, $this->maxInstallments);
             $installmentsObj = [];
 
             foreach($installments as $installment) {
                 $instVal = round($this->value / $installment, 2);
                 $installmentsObj[] = [
-                    'label' => "$installment x R$ $instVal",
+                    'label' => "$installment x $prefix $instVal",
                     'value' => $installment,
                 ];
             }

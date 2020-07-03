@@ -16,7 +16,7 @@ function post_payment()
         'national_id' => $_POST['national-id'],
         'email' => $_POST['email'],
     ], [
-        'number' => $_POST['cardnumber'],
+        'number' => str_replace(' ', '', $_POST['cardnumber']),
         'card_holder_name' => $_POST['ccname'],
         'cvv' => $_POST['cvc'],
         'expiration_month' => $expDateParts[0],
@@ -24,7 +24,7 @@ function post_payment()
     ]);
 
     if ($bexsPayment['status'] == 'AUTHORIZED') {
-        $dbId = bcbInsertPaymentRegister($_POST, $bexsPayment['id']);
+        $dbId = bcbInsertPaymentRegister($_POST, $bexsPayment);
         return ['code' => $dbId];
     }
 

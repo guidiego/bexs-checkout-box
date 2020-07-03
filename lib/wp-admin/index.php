@@ -52,7 +52,7 @@
             add_settings_field(
                 $optName,
                 __($field['label'], 'wordpress' ),
-                bcb_create_text_input($pluginSlug, $field['name']),
+                array_key_exists("render", $field) ? $field['render'] : bcb_create_text_input($pluginSlug, $field['name']),
                 $pluginName,
                 $pluginSlug . '_' . $pluginName . '_section'
             );
