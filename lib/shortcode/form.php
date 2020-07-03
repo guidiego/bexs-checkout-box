@@ -1,17 +1,17 @@
 <style>
-    .bpc-form {
+    .bcb-form {
         background: #fff;
         padding: 20px;
         border-radius: 5px;
     }
 
-    .bcp-row::after {
+    .bcb-row::after {
         content: " ";
         display: block;
         clear: both;
     }
 
-    .bpc-form > .bpc-form-title {
+    .bcb-form > .bcb-form-title {
         margin: 0 0 20px;
         text-align: center;
         padding-bottom: 20px;
@@ -19,11 +19,11 @@
         color: #00df91;
     }
 
-    .bpc-form .bpc-form-input {
+    .bcb-form .bcb-form-input {
         position: relative;
     }
 
-    .bpc-form .bpc-form-input > span {
+    .bcb-form .bcb-form-input > span {
         display: block;
         position: relative;
         width: 1px;
@@ -31,8 +31,8 @@
         overflow: hidden;
     }
 
-    .bpc-form .bpc-form-input > input,
-    .bpc-form .bpc-form-input > .bpc-fake-select {
+    .bcb-form .bcb-form-input > input,
+    .bcb-form .bcb-form-input > .bpc-fake-select {
         border: 1px solid #d2dae1;
         color: #384554;
         background-color: #fff;
@@ -44,12 +44,12 @@
         font-family: "Inter var", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, sans-serif;
     }
 
-    .bpc-form .bpc-form-input > input:focus {
+    .bcb-form .bcb-form-input > input:focus {
         outline: none;
         border-color: #00df91;
     }
 
-    .bpc-form .bpc-form-input select {
+    .bcb-form .bcb-form-input select {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -57,7 +57,7 @@
         width: 100%;
     }
 
-    .bpc-form .bpc-form-input select:focus + .bpc-fake-select {
+    .bcb-form .bcb-form-input select:focus + .bpc-fake-select {
         border-color: #00df91;
     }
 
@@ -65,20 +65,20 @@
     .input-cv { margin: 0 2% }
     .input-installments { width: 36% }
 
-    .bpc-form > .bpc-form-btn {
+    .bcb-form > .bcb-form-btn {
         background: #00df91;
         width: 100%;
     }
 
-    .bpc-form > .bpc-form-btn:focus {
+    .bcb-form > .bcb-form-btn:focus {
         outline: none;
     }
 
-    .bpc-form > .bpc-form-btn.bcb-btn-load {
+    .bcb-form > .bcb-form-btn.bcb-btn-load {
         position: relative;
     }
 
-    .bpc-form > .bpc-form-btn.bcb-btn-load::before {
+    .bcb-form > .bcb-form-btn.bcb-btn-load::before {
         content: " ";
         position: absolute;
         top: 0;
@@ -89,12 +89,12 @@
     }
 </style>
 
-<?php $inputClass = 'bpc-form-input ' . bcb_get_style_prop('desc_class') ?>
-<form class="bpc-form <?= bcb_get_style_prop('box_class') ?>">
-    <h3 class="bpc-form-title <?= bcb_get_style_prop('title_class') ?>">
+<?php $inputClass = 'bcb-form-input ' . bcb_get_style_prop('desc_class') ?>
+<form class="bcb-form <?= bcb_get_style_prop('box_class') ?>">
+    <h3 class="bcb-form-title <?= bcb_get_style_prop('title_class') ?>">
         <?= $payment->title ?>
     </h3>
-    <div class="bpc-form-description <?= bcb_get_style_prop('desc_class') ?>">
+    <div class="bcb-form-description <?= bcb_get_style_prop('desc_class') ?>">
         <?= $payment->description ?>
     </div>
     <label class="<?= $inputClass ?>">
@@ -113,7 +113,7 @@
         <span>Nome</span>
         <input placeholder="<?= bcb_get_style_prop('name_placeholder') ?>" name="ccname" autocomplete="cc-name">
     </label>
-    <div class="bcp-row">
+    <div class="bcb-row">
         <label class="<?= $inputClass ?> input-datev">
             <span>Data de Vencimento</span>
             <input placeholder="<?= bcb_get_style_prop('exp_placeholder') ?>" name="cc-exp" autocomplete="cc-exp" data-mask="00/00" >
@@ -136,7 +136,7 @@
             </div>
         </label>
     </div>
-    <button type="submit" class="bpc-form-btn <?= bcb_get_style_prop('btn_class') ?>">
+    <button type="submit" class="bcb-form-btn <?= bcb_get_style_prop('btn_class') ?>">
         <?= bcb_get_style_prop('btn_text') ?>
     </button>
 </form>
@@ -154,10 +154,10 @@
             document.querySelector('.bpc-fake-select').textContent = opt.textContent;
         }
 
-        document.querySelector('.bpc-form').addEventListener('submit', function (e) {
+        document.querySelector('.bcb-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const loadClass = 'bcb-btn-load';
-            const btn = document.querySelector('.bpc-form-btn')
+            const btn = document.querySelector('.bcb-form-btn')
             const form = Array
                 .from(e.target.elements)
                 .reduce((prev, el) => ({
