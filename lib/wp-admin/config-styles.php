@@ -26,6 +26,28 @@
                     'label' => 'CSS class to be added on Button',
                 ],
                 [
+                    'name' => 'modal_mode',
+                    'label' => 'Active Modal',
+                    'default' => 'false',
+                    'render' => 'bcb_modal_mode_render'
+                ],
+                [
+                    'name' => 'modal_position',
+                    'label' => 'Modal Position',
+                    'default' => 'center',
+                    'render' => 'bcb_modal_position_render'
+                ],
+                [
+                    'name' => 'cta_button',
+                    'label' => 'CTA Button Text',
+                    'default' => 'Buy',
+                ],
+                [
+                    'name' => 'close_modal_button',
+                    'label' => 'Modal Close Button Text',
+                    'default' => 'Close',
+                ],
+                [
                     'name' => 'btn_text',
                     'label' => 'Button Text',
                     'default' => 'Finish Payment',
@@ -62,6 +84,44 @@
                 ],
             ]
         );
+    }
+
+    function bcb_modal_mode_render()
+    {
+        $availableOpts = ['true', 'false'];
+        $pluginSlug = 'bcb_style';
+        $fieldName = 'modal_mode';
+        $options = get_option($pluginSlug);
+        $fieldTotalName = $pluginSlug . '_' . $fieldName;
+        $fieldPropName = $pluginSlug . "[" . $fieldTotalName . "]";
+        $val = $options[$fieldTotalName];
+
+        ?>
+            <select name='<?= $fieldPropName ?>'>
+                <?php foreach($availableOpts as $opt) { ?>
+                    <option value="<?= $opt ?>" <?php selected($opt, $val); ?>><?= $opt ?></option>
+                <?php } ?>
+            </select>
+        <?php
+    }
+
+    function bcb_modal_position_render()
+    {
+        $availableOpts = ['center', 'left', 'right'];
+        $pluginSlug = 'bcb_style';
+        $fieldName = 'modal_position';
+        $options = get_option($pluginSlug);
+        $fieldTotalName = $pluginSlug . '_' . $fieldName;
+        $fieldPropName = $pluginSlug . "[" . $fieldTotalName . "]";
+        $val = $options[$fieldTotalName];
+
+        ?>
+            <select name='<?= $fieldPropName ?>'>
+                <?php foreach($availableOpts as $opt) { ?>
+                    <option value="<?= $opt ?>" <?php selected($opt, $val); ?>><?= $opt ?></option>
+                <?php } ?>
+            </select>
+        <?php
     }
 
     function bcb_style_section_callback(  ) {

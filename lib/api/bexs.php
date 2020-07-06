@@ -13,7 +13,7 @@ class BexsAPI {
                         "client_id" => bcb_get_option('bcb_api', 'client_id'),
                         "client_secret" => bcb_get_option('bcb_api', 'client_secret'),
                         "grant_type" => "client_credentials",
-                        "audience" => "https://payments-sandbox/v1/payments"
+                        "audience" => bcb_get_option('bcb_api', 'bexs_audience_url'),
                     ])
                 ])
             ),

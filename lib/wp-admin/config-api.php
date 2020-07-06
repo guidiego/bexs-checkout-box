@@ -15,6 +15,16 @@
                     'label' => 'Bexs Client Secret',
                 ],
                 [
+                    'name' => 'bexs_audience_url',
+                    'label' => 'Bexs Audience',
+                    'default' => 'https://payments-sandbox/v1/payments',
+                ],
+                [
+                    'name' => 'bexs_api_url',
+                    'label' => 'Bexs Client API',
+                    'default' => 'https://sandbox.bexs.com.br/v1',
+                ],
+                [
                     'name' => 'amount_kind',
                     'label' => 'Select amount type (BRL or Foreign)',
                     'render' => 'bcb_amount_kind_render',
@@ -24,11 +34,6 @@
                     'name' => 'coin_kind',
                     'label' => 'Coin Prefix',
                     'default' => 'R$',
-                ],
-                [
-                    'name' => 'bexs_api_url',
-                    'label' => 'Bexs Client API',
-                    'default' => 'https://sandbox.bexs.com.br/v1',
                 ],
                 [
                     'name' => 'redirect_url',
