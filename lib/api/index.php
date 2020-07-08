@@ -28,7 +28,17 @@ function post_payment()
         return ['code' => $dbId];
     }
 
-    return $bexsPayment;
+    $error = '';
+
+    if ($bexsPayment['status'] == 'DECLINED_BY_BUSINESS_RULES') {
+        $error = 'bexs_user_data';
+    }
+
+    if ($bexsPayment['status'] == 'DECLINED_BY_ISSUER') {
+        $error = 'bexs_credit_card';
+    }
+
+    return new WP_Error( $error, 'Bexs Api Error', ['status' => 500 ] );
 }
 
 add_action('rest_api_init', function () {
