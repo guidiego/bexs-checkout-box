@@ -82,6 +82,16 @@
                     'label' => "cvv's field placeholder",
                     'default' => 'Security Code',
                 ],
+                [
+                    'name' => 'consumer_data_error',
+                    'label' => "Message when user inform a invalid personal data",
+                    'default' => 'Ops! We found some problems with your personal data (E-mail, National ID or Name), check it out!',
+                ],
+                [
+                    'name' => 'issuer_error',
+                    'label' => "Message when user give a invalid credit card information",
+                    'default' => 'Ops! We have a problem with your credit card. Please try again later or use another credit card.',
+                ],
             ]
         );
     }

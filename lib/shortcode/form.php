@@ -152,6 +152,21 @@
         margin-top: 10px;
     }
 
+    .bcb-alert {
+        background: #ffefef;
+        border-radius: 3px;
+        border: 1px solid #9c0d0d;
+        color: #9c0d0d;
+        margin-bottom: 15px;
+        text-align: center;
+        padding: 5px 10px;
+        font-size: 16px;
+        display: none;
+    }
+
+    .bcb-alert.show {
+        display: block;
+    }
 </style>
 
 <?php $inputClass = 'bcb-form-input ' . bcb_get_style_prop('desc_class') ?>
@@ -168,6 +183,9 @@
         </h3>
         <div class="bcb-form-description <?= bcb_get_style_prop('desc_class') ?>">
             <?= $payment->description ?>
+        </div>
+        <div class="bcb-alert">
+            Teste
         </div>
         <label class="<?= $inputClass ?>">
             <span><?= bcb_get_style_prop('email_placeholder') ?></span>
@@ -249,6 +267,10 @@
             event.stopPropagation();
         });
     <?php } ?>
+        ALERT_TEXTS = {
+            'bexs_user_data': "<?= bcb_get_style_prop('consumer_data_error') ?>",
+            'bexs_credit_card': "<?= bcb_get_style_prop('issuer_error') ?>",
+        };
 
         document.querySelector('.bcb-form').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -283,10 +305,25 @@
                     window.location.href = "<?= bcb_get_api_prop('redirect_url') ?>"
                 }
 
+                const onFail = (d) => {
+                    const alert = document.querySelector('.bcb-alert');
+                    alert.classList.add('show');
+                    alert.textContent = ALERT_TEXTS[d.code];
+                    btn.classList.toggle(loadClass);
+                }
+
+                const handleResponse = (response) => {
+                    return response.json().then((data) => {
+                        if (response.ok) {
+                            onSuccess(data);
+                        }
+
+                        onFail(data);
+                    });
+                }
+
                 fetch('/?rest_route=/bexs-checkout/v1/pay', options)
-                    .then((response) => response.json())
-                    .then(onSuccess)
-                    .catch(() => btn.classList.toggle(loadClass))
+                    .then(handleResponse)
             }
         });
     }
