@@ -44,7 +44,10 @@
         $payment = new BCBPayment(array_merge($baseAttrs, $attrs));
 
         if (isset($payment)) {
-            include('form.php');
+            ob_start();
+            include_once('form.php');
+            $output = ob_get_clean();
+            return $output;
         }
     }
 
