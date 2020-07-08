@@ -112,6 +112,12 @@
         display: none;
     }
 
+    .bcb-modal > form {
+        max-width: 700px;
+        margin: 0 auto;
+        width: 95%;
+    }
+
     .bcb-modal-open {
         display: block;
     }
@@ -122,6 +128,8 @@
         top: 0;
         bottom: 0;
         border-radius: 0px;
+        max-width: auto;
+        width: auto;
     }
 
     .bcb-modal-right > form {
