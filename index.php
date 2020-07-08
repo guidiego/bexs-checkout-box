@@ -17,6 +17,7 @@ $pluginPath = plugin_dir_path(__FILE__);
 include_once($pluginPath . 'lib/wp-admin/index.php');
 include_once($pluginPath . 'lib/shortcode/index.php');
 include_once($pluginPath . 'lib/api/index.php');
+include_once($pluginPath . 'lib/editor/button.php');
 
 register_activation_hook(__FILE__, 'bcbCreateTable');
 register_deactivation_hook(__FILE__, 'bcbDropTable');
