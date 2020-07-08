@@ -189,28 +189,28 @@
         </div>
         <label class="<?= $inputClass ?>">
             <span><?= bcb_get_style_prop('email_placeholder') ?></span>
-            <input placeholder="<?= bcb_get_style_prop('email_placeholder') ?>" name="email" autocomplete="email" type="email">
+            <input required placeholder="<?= bcb_get_style_prop('email_placeholder') ?>" name="email" autocomplete="email" type="email">
         </label>
         <label class="<?= $inputClass ?>">
             <span><?= bcb_get_style_prop('national_id_placeholder') ?></span>
-            <input placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id" data-mask="^[0-9]\d{0,12}$" data-regex>
+            <input required placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id" data-mask="^[0-9]\d{0,12}$" data-regex>
         </label>
         <label class="<?= $inputClass ?>">
             <span><?= bcb_get_style_prop('cardnumber_placeholder') ?></span>
-            <input placeholder="<?= bcb_get_style_prop('cardnumber_placeholder') ?>" name="cardnumber" autocomplete="cc-number" data-mask="0000 0000 0000 0000">
+            <input required placeholder="<?= bcb_get_style_prop('cardnumber_placeholder') ?>" name="cardnumber" autocomplete="cc-number" data-mask="0000 0000 0000 0000">
         </label>
         <label class="<?= $inputClass ?>">
             <span><?= bcb_get_style_prop('name_placeholder') ?></span>
-            <input placeholder="<?= bcb_get_style_prop('name_placeholder') ?>" name="ccname" autocomplete="cc-name">
+            <input required placeholder="<?= bcb_get_style_prop('name_placeholder') ?>" name="ccname" autocomplete="cc-name">
         </label>
         <div class="bcb-row">
             <label class="<?= $inputClass ?> input-datev">
                 <span><?= bcb_get_style_prop('exp_placeholder') ?></span>
-                <input placeholder="<?= bcb_get_style_prop('exp_placeholder') ?>" name="cc-exp" autocomplete="cc-exp" data-mask="00/00" >
+                <input required placeholder="<?= bcb_get_style_prop('exp_placeholder') ?>" name="cc-exp" autocomplete="cc-exp" data-mask="00/00" >
             </label>
             <label class="<?= $inputClass ?> input-cv">
                 <span><?= bcb_get_style_prop('cvv_placeholder') ?></span>
-                <input placeholder="<?= bcb_get_style_prop('cvv_placeholder') ?>" name="cvc" autocomplete="cc-csc" data-mask="^[0-9]\d{0,3}$" data-regex>
+                <input required placeholder="<?= bcb_get_style_prop('cvv_placeholder') ?>" name="cvc" autocomplete="cc-csc" data-mask="^[0-9]\d{0,3}$" data-regex>
             </label>
             <input type="hidden" name="value" value="<?= $payment->value ?>">
             <label class="<?= $inputClass ?> input-installments">
