@@ -11,19 +11,19 @@ function bcbCreateTable()
     if (!empty($wpdb->collate))
         $charset_collate .= " COLLATE $wpdb->collate";
 
+    // status - > 0 (waiting) / 1 (success) / 2 (error)
     $dbQuery = "CREATE TABLE " . $dbName . " (
         `id` int(10) NOT NULL AUTO_INCREMENT,
-        `bexs_id` varchar(100) NOT NULL,
-        `bexs_tax` varchar(25) NOT NULL,
-        `brl_value` varchar(25) NOT NULL,
-        `foreign_value` varchar(25) NOT NULL,
-        `name` varchar(255) NOT NULL,
-        `email` varchar(255) NOT NULL,
-        `national_id` varchar(255) NOT NULL,
-        `last_cc_number` int(10) NOT NULL,
-        `exp_date` varchar(10) NOT NULL,
-        `installments` int(10) NOT NULL,
-        `tmstp` DATETIME NOT NULL,
+        `bexs_id` varchar(100),
+        `bexs_tax` varchar(25),
+        `brl_value` varchar(25),
+        `installments` int,
+        `foreign_value` varchar(25),
+        `name` varchar(255),
+        `email` varchar(255),
+        `national_id` varchar(255),
+        `status` int,
+        `tmstp` DATETIME,
         PRIMARY KEY (id)
     ) $charset_collate;";
 
@@ -39,26 +39,39 @@ function bcbDropTable()
     $wpdb->query($dbQuery);
 }
 
-function bcbInsertPaymentRegister($payment, $bexs)
+function bcbInsertPaymentRegister($payment)
 {
     global $wpdb;
     $dbName = $wpdb->prefix . 'bexs_payments';
     $wpdb->insert($dbName, [
-        'name' => $payment['ccname'],
+        'name' => $payment['name'],
         'email' => $payment['email'],
-        'national_id' => $_POST['national-id'],
-        'bexs_id' => $bexs['id'],
-        'bexs_tax' => $bexs['amount_info']['financial_tax'],
-        'brl_value' => $bexs['amount_info']['gross_amount'],
-        'foreign_value' => $bexs['amount_info']['foreign_gross_amount'],
-        'last_cc_number' => (int) substr($payment['cardnumber'], strlen($payment['cardnumber']) - 4, 4),
-        'exp_date' => $payment['cc-exp'],
+        'national_id' => $payment['national-id'],
         'installments' => (int) $payment['installments'],
+        'status' => 0,
         'tmstp' => (new DateTime('NOW'))->format('Y-m-d H:i:s'),
     ]);
 
     return $wpdb->insert_id;
 }
+
+function bcbUpdatePaymentRegister($id, $bexs) {
+    global $wpdb;
+    $dbName = $wpdb->prefix . 'bexs_payments';
+    $wpdb->update($dbName, [
+        'bexs_id' => $bexs['id'],
+        'bexs_tax' => $bexs['amount_info']['financial_tax'],
+        'brl_value' => $bexs['amount_info']['gross_amount'],
+        'foreign_value' => $bexs['amount_info']['foreign_gross_amount'],
+    ], ['id' => $id]);
+}
+
+function bcbCompletePayment($id, $status) {
+    global $wpdb;
+    $dbName = $wpdb->prefix . 'bexs_payments';
+    $wpdb->update($dbName, [ 'status' => $status], ['id' => $id]);
+}
+
 
 function bexsPaymentPage()
 {
@@ -120,8 +133,8 @@ function bexsPaymentPage()
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>BexsID</th>
                         <th>Timestamp</th>
+                        <th>BexsID</th>
                         <th><?= bcb_get_api_prop('coin_kind') ?></th>
                         <th>RS</th>
                         <th>Bexs Tax</th>
@@ -129,25 +142,23 @@ function bexsPaymentPage()
                         <th>Consumer Email</th>
                         <th>Consumer Name</th>
                         <th>National ID</th>
-                        <th>Last Digits</th>
-                        <th>Exp Date</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($rows as $payment) { ?>
                         <tr>
                             <td><?= $payment->id ?></td>
-                            <td><?= $payment->bexs_id ?></td>
                             <td><?= $payment->tmstp ?></td>
-                            <td><?= $payment->foreign_value ?></td>
-                            <td><?= $payment->brl_value ?></td>
-                            <td><?= $payment->bexs_tax ?></td>
+                            <td><?= $payment->bexs_id == null ? '---' : $payment->bexs_id  ?></td>
+                            <td><?= $payment->foreign_value == null ? '---' : $payment->foreign_value  ?></td>
+                            <td><?= $payment->brl_value == null ? '---' : $payment->brl_value  ?></td>
+                            <td><?= $payment->bexs_tax == null ? '---' : $payment->bexs_tax  ?></td>
                             <td><?= $payment->installments ?></td>
                             <td><?= $payment->email ?></td>
                             <td><?= $payment->name ?></td>
                             <td><?= $payment->national_id ?></td>
-                            <td><?= $payment->last_cc_number ?></td>
-                            <td><?= $payment->exp_date ?></td>
+                            <td><?= $payment->status ?></td>
                         <tr>
                     <?php } ?>
                 </tbody>

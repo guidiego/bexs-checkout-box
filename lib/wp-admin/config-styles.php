@@ -6,26 +6,6 @@
             'Component Style',
             [
                 [
-                    'name' => 'ipt_class',
-                    'label' => 'CSS class to be added on input',
-                ],
-                [
-                    'name' => 'title_class',
-                    'label' => 'CSS class to be added on title',
-                ],
-                [
-                    'name' => 'desc_class',
-                    'label' => 'CSS class to be added on description',
-                ],
-                [
-                    'name' => 'box_class',
-                    'label' => 'CSS class to be added on Box',
-                ],
-                [
-                    'name' => 'btn_class',
-                    'label' => 'CSS class to be added on Button',
-                ],
-                [
                     'name' => 'modal_mode',
                     'label' => 'Active Modal',
                     'default' => 'false',
@@ -63,34 +43,14 @@
                     'default' => 'National ID',
                 ],
                 [
-                    'name' => 'cardnumber_placeholder',
-                    'label' => "cardnumber's field placeholder",
-                    'default' => 'Credit Card Number',
-                ],
-                [
                     'name' => 'name_placeholder',
                     'label' => "name's field placeholder",
-                    'default' => 'Name in Credit Card',
-                ],
-                [
-                    'name' => 'exp_placeholder',
-                    'label' => "exp's field placeholder",
-                    'default' => 'Expire Date',
-                ],
-                [
-                    'name' => 'cvv_placeholder',
-                    'label' => "cvv's field placeholder",
-                    'default' => 'Security Code',
+                    'default' => 'Full Name',
                 ],
                 [
                     'name' => 'consumer_data_error',
                     'label' => "Message when user inform a invalid personal data",
                     'default' => 'Ops! We found some problems with your personal data (E-mail, National ID or Name), check it out!',
-                ],
-                [
-                    'name' => 'issuer_error',
-                    'label' => "Message when user give a invalid credit card information",
-                    'default' => 'Ops! We have a problem with your credit card. Please try again later or use another credit card.',
                 ],
             ]
         );

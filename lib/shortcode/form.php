@@ -157,10 +157,7 @@
     }
 
     .bcb-wrap > div {
-        border-radius: 5px;
-        overflow: hidden;
         box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
-        height: 100%;
         max-width: 580px;
         width: 100%;
         margin: 0 auto;
@@ -219,13 +216,6 @@
         margin: 0 auto 25px;
     }
 
-    .bcb-modal-close {
-        border: 2px solid #888;
-        color: #888;
-        background: transparent!important;
-        margin-top: 10px;
-    }
-
     .bcb-alert {
         background: #ffefef;
         border-radius: 3px;
@@ -269,6 +259,26 @@
     .bcb-icon {
         width: 50px;
         height: 50px;
+    }
+
+    .bcb-final-alert {
+        background: #FFF;
+        text-align: center;
+        padding: 40px;
+        font-size: 22px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .bcb-corner-btn {
+        background: transparent!important;
+        position: absolute!important;
+        top: 100px!important;
+        font-family: Verdana, Geneva, Tahoma, sans-serif!important;
+        text-transform: lowercase;
+    }
+
+    #bcbStep2, #bcbStep3 {
+        display: none;
     }
 </style>
 
@@ -330,11 +340,17 @@
         </form>
     </div>
     <div id="bcbStep2"></div>
+    <div id="bcbStep3">
+        <div class="bcb-final-alert">
+            Seu pagamento foi confirmado e está sendo processado! Obrigado pela preferencia!
+            <div class="bcb-btn bcb-modal-close">
+               Fechar
+            </div>
+        </div>
+    </div>
 
     <?php if ($isModal) { ?>
-        <button type="button" class="bcb-btn bcb-modal-close">
-            <?= bcb_get_style_prop('close_modal_button') ?>
-        </button>
+        <button type="button" class="bcb-corner-btn bcb-modal-close">X</button>
     <?php } ?>
 </div>
 
@@ -353,17 +369,23 @@
         }
 
     <?php if ($isModal) { ?>
+        const resetModal = () => {
+            const step2 = document.getElementById('bcbStep2');
+
+            document.querySelector('.bcb-modal').classList.remove('bcb-modal-open');
+            document.getElementById('bcbStep1').style.display = 'block';
+            document.getElementById('bcbStep3').style.display = 'none';
+
+            step2.innerHTML = '';
+            step2.style.display = 'none';
+        }
+
         document.querySelector('.bcb-modal-open-cta').addEventListener('click', function () {
             document.querySelector('.bcb-modal').classList.add('bcb-modal-open');
         });
 
-        document.querySelector('.bcb-modal').addEventListener('click', function (event) {
-            this.classList.remove('bcb-modal-open');
-        });
-
-        document.querySelector('.bcb-modal .bcb-modal-close').addEventListener('click', function (event) {
-            document.querySelector('.bcb-modal').classList.remove('bcb-modal-open');
-        });
+        document.querySelector('.bcb-modal').addEventListener('click', () => resetModal());
+        document.querySelector('.bcb-modal .bcb-modal-close').addEventListener('click', () => resetModal());
 
         document.querySelector('.bcb-modal form').addEventListener('click', function (event) {
             event.stopPropagation();
@@ -393,7 +415,7 @@
             btn.classList.toggle(loadClass);
 
             if ('fetch' in window ){
-                const options = {
+                const createOptions = {
                     method: 'POST',
                     body: JSON.stringify(form),
                     credentials: 'same-origin',
@@ -403,20 +425,37 @@
                     },
                 };
 
+                const updateOptions = (id, status) => ({
+                    method: 'PUT',
+                    body: JSON.stringify({ id, status }),
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                const completeStatus = (id, status, callback = () => {}) => () => fetch(
+                    '/?rest_route=/bexs-checkout/v1/pay/complete',
+                    updateOptions(id, status)
+                ).then(callback);
+
                 const onSuccess = (d) => {
-                    document.getElementById('bcbStep1').style.display = 'none';
                     window.CheckoutBexs(d.redirectURL, 'bcbStep2', {
-                        paymentSuccess: () => {
-                            window.location = "/payment/" + paymentID;
-                        },
-                        paymentFail: () => {console.log("Payment fail")},
-                        iframeFallback: () => {
-                            window.location = "/failed";
-                        },
+                        paymentSuccess: completeStatus(d.id, 1, () => {
+                            document.getElementById('bcbStep2').style.display = 'none';
+                            document.getElementById('bcbStep3').style.display = 'block';
+                        }),
+                        paymentFail: completeStatus(d.id, 2),
+                        iframeFallback: completeStatus(d.id, 2),
                         changeOrder: () => {
                             window.location = "/";
                         }
                     });
+
+                    btn.classList.toggle(loadClass);
+                    document.getElementById('bcbStep1').style.display = 'none';
+                    document.getElementById('bcbStep2').style.display = 'block';
                 }
 
                 const onFail = (d) => {
@@ -436,7 +475,7 @@
                     });
                 }
 
-                fetch('/?rest_route=/bexs-checkout/v1/pay', options)
+                fetch('/?rest_route=/bexs-checkout/v1/pay', createOptions)
                     .then(handleResponse)
             }
         });
