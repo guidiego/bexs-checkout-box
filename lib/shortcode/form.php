@@ -30,6 +30,7 @@
         height: 42px;
         border-bottom: solid 1px #c9c9c9;
         margin-bottom: 45px;
+        display: block;
     }
 
     .bcb-form-input input {
@@ -54,7 +55,7 @@
         height: auto;
         top: 15px;
         font-size: 17px;
-        color: #c9c9c9;
+        color: #c9c9c9!important;
         text-align: left;
         white-space: nowrap;
         cursor: text;
@@ -108,6 +109,7 @@
         z-index: 1;
     }
 
+    body[data-form-submit="regular"] button[type=submit].bcb-btn,
     .bcb-btn {
         display: inline-block;
         padding: 16px 80px;
@@ -173,15 +175,15 @@
         background: rgba(0, 0, 0, 0.6);
         max-width: 100%!important;
         width: 100%!important;
-        padding: 100px 50px 0;
-        z-index: 10;
+        padding: 100px 50px;
         margin: 0;
-        z-index: 100000;
+        z-index: 2147483649;
         display: none;
     }
 
-    .bcb-modal > form {
-        max-width: 700px;
+    .bcb-modal > div {
+        position: relative;
+        max-width: 550px;
         margin: 0 auto;
         width: 95%;
     }
@@ -192,11 +194,9 @@
 
     .bcb-modal-left > div,
     .bcb-modal-right > div {
-        position: fixed;
+        position: absolute;
         top: 0;
-        left: 0;
         bottom: 0;
-        border-radius: 0;
     }
 
     .bcb-modal-left > div > .bcb-form,
@@ -206,10 +206,12 @@
 
     .bcb-modal-right > div {
         right: 0;
+        left: auto;
     }
 
     .bcb-modal-left > div {
         left: 0;
+        right: auto;
     }
 
     .bcb-modal-open-cta {
@@ -257,8 +259,19 @@
     }
 
     .bcb-icon {
-        width: 50px;
-        height: 50px;
+        min-width: 50px;
+        line-height: 48px;
+        border: 2px solid #FFF;
+        border-radius: 50%;
+        text-align: center;
+        margin-right: 25px;
+    }
+
+    .bcb-icon > span {
+        width: 45px;
+        line-height: 48px;
+        font-size: 30px;
+        text-align: center;
     }
 
     .bcb-final-alert {
@@ -272,9 +285,14 @@
     .bcb-corner-btn {
         background: transparent!important;
         position: absolute!important;
-        top: 100px!important;
+        top: 5px;
         font-family: Verdana, Geneva, Tahoma, sans-serif!important;
         text-transform: lowercase;
+        color: #FFF;
+        border: none;
+        left: 5px;
+        font-size: 16px;
+        font-weight: bold;
     }
 
     #bcbStep2, #bcbStep3 {
@@ -283,23 +301,22 @@
 </style>
 
 <?php $inputClass = 'bcb-form-input' ?>
-<?php $isModal = bcb_get_style_prop('modal_mode') == 'true' ?>
-<?php if ($isModal) { ?>
-    <button type="button" class="bcb-btn bcb-modal-open-cta">
-        <?= bcb_get_style_prop('cta_button') ?>
-    </button>
-<?php } ?>
-<div class="bcb-wrap <?= $isModal ? 'bcb-modal' : '' ?> <?= $isModal ? 'bcb-modal-' . bcb_get_style_prop('modal_position') : '' ?>">
+<button type="button" class="bcb-btn bcb-modal-open-cta">
+    <?= bcb_get_style_prop('cta_button') ?>
+</button>
+<div class="bcb-wrap bcb-modal <?= 'bcb-modal-' . bcb_get_style_prop('modal_position') ?>">
     <div id="bcbStep1">
+        <button type="button" class="bcb-corner-btn bcb-modal-close">X</button>
         <div class="bcb-header">
             <p class="bcb-steps">
                 <b>Etapa 1</b> de 3
             </p>
             <div class="bcb-title">
                 <div class="bcb-icon">
+                    <span class="dashicons dashicons-admin-users"></span>
                 </div>
                 <div>
-                    Informe os dados do comprador
+                    <?= bcb_get_style_prop('first_step_modal_title') ?>
                 </div>
             </div>
         </div>
@@ -339,7 +356,9 @@
             </button>
         </form>
     </div>
-    <div id="bcbStep2"></div>
+    <div id="bcbStep2">
+        <button type="button" class="bcb-corner-btn bcb-modal-close">X</button>
+    </div>
     <div id="bcbStep3">
         <div class="bcb-final-alert">
             Seu pagamento foi confirmado e está sendo processado! Obrigado pela preferencia!
@@ -349,15 +368,12 @@
         </div>
     </div>
 
-    <?php if ($isModal) { ?>
-        <button type="button" class="bcb-corner-btn bcb-modal-close">X</button>
-    <?php } ?>
 </div>
 
 <script src="https://unpkg.com/imask" async></script>
 <script src="https://apis.bexs.com.br/v1/lib/checkout-bexs.js" async></script>
 <script>
-    document.body.onload = function () {
+    const modalInit = () => {
         document.querySelectorAll('[data-mask]').forEach((el) => {
             const mask = el.dataset.regex !== "" ? el.dataset.mask : new RegExp(el.dataset.mask);
             IMask(el, { mask });
@@ -367,8 +383,6 @@
             const opt = this.querySelector(`option[value="${this.value}"]`);
             document.querySelector('.bpc-fake-select').textContent = opt.textContent;
         }
-
-    <?php if ($isModal) { ?>
         const resetModal = () => {
             const step2 = document.getElementById('bcbStep2');
 
@@ -376,13 +390,9 @@
             document.getElementById('bcbStep1').style.display = 'block';
             document.getElementById('bcbStep3').style.display = 'none';
 
-            step2.innerHTML = '';
+            step2.removeChild(step2.querySelector('iframe'));
             step2.style.display = 'none';
         }
-
-        document.querySelector('.bcb-modal-open-cta').addEventListener('click', function () {
-            document.querySelector('.bcb-modal').classList.add('bcb-modal-open');
-        });
 
         document.querySelector('.bcb-modal').addEventListener('click', () => resetModal());
         document.querySelector('.bcb-modal .bcb-modal-close').addEventListener('click', () => resetModal());
@@ -390,10 +400,9 @@
         document.querySelector('.bcb-modal form').addEventListener('click', function (event) {
             event.stopPropagation();
         });
-    <?php } ?>
+
         ALERT_TEXTS = {
             'bexs_user_data': "<?= bcb_get_style_prop('consumer_data_error') ?>",
-            'bexs_credit_card': "<?= bcb_get_style_prop('issuer_error') ?>",
         };
 
         document.querySelector('.bcb-form').addEventListener('submit', function (e) {
@@ -478,6 +487,16 @@
                 fetch('/?rest_route=/bexs-checkout/v1/pay', createOptions)
                     .then(handleResponse)
             }
+        });
+    }
+    document.body.onload = function () {
+        const paymentModal = document.querySelector('.bcb-modal');
+        paymentModal.parentNode.removeChild(paymentModal);
+
+        document.querySelector('.bcb-modal-open-cta').addEventListener('click', function () {
+            document.body.prepend(paymentModal);
+            document.querySelector('.bcb-modal').classList.add('bcb-modal-open');
+            modalInit();
         });
     }
 </script>

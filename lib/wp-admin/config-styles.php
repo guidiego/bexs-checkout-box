@@ -6,12 +6,6 @@
             'Component Style',
             [
                 [
-                    'name' => 'modal_mode',
-                    'label' => 'Active Modal',
-                    'default' => 'false',
-                    'render' => 'bcb_modal_mode_render'
-                ],
-                [
                     'name' => 'modal_position',
                     'label' => 'Modal Position',
                     'default' => 'center',
@@ -23,14 +17,19 @@
                     'default' => 'Buy',
                 ],
                 [
+                    'name' => 'first_step_modal_title',
+                    'label' => 'The consumer information modal title',
+                    'default' => 'Consumer information',
+                ],
+                [
                     'name' => 'close_modal_button',
-                    'label' => 'Modal Close Button Text',
+                    'label' => 'Success close button text',
                     'default' => 'Close',
                 ],
                 [
                     'name' => 'btn_text',
-                    'label' => 'Button Text',
-                    'default' => 'Finish Payment',
+                    'label' => 'First modal button text',
+                    'default' => 'Next',
                 ],
                 [
                     'name' => 'email_placeholder',
@@ -54,25 +53,6 @@
                 ],
             ]
         );
-    }
-
-    function bcb_modal_mode_render()
-    {
-        $availableOpts = ['true', 'false'];
-        $pluginSlug = 'bcb_style';
-        $fieldName = 'modal_mode';
-        $options = get_option($pluginSlug);
-        $fieldTotalName = $pluginSlug . '_' . $fieldName;
-        $fieldPropName = $pluginSlug . "[" . $fieldTotalName . "]";
-        $val = $options[$fieldTotalName];
-
-        ?>
-            <select name='<?= $fieldPropName ?>'>
-                <?php foreach($availableOpts as $opt) { ?>
-                    <option value="<?= $opt ?>" <?php selected($opt, $val); ?>><?= $opt ?></option>
-                <?php } ?>
-            </select>
-        <?php
     }
 
     function bcb_modal_position_render()

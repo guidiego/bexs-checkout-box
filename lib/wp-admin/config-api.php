@@ -36,10 +36,6 @@
                     'default' => 'R$',
                 ],
                 [
-                    'name' => 'redirect_url',
-                    'label' => 'Success Redirect URL',
-                ],
-                [
                     'name' => 'default_max_installments',
                     'label' => 'Default Max Installments',
                     'default' => '5',
