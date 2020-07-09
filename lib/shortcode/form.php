@@ -1,8 +1,7 @@
 <style>
     .bcb-form {
         background: #fff;
-        padding: 20px;
-        border-radius: 5px;
+        padding: 40px;
     }
 
     .bcb-row::after {
@@ -25,57 +24,110 @@
         border-bottom: 1px solid #4c5867;
     }
 
-    .bcb-form .bcb-form-input {
+    .bcb-form-input {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
         position: relative;
+        height: 42px;
+        border-bottom: solid 1px #c9c9c9;
+        margin-bottom: 45px;
     }
 
-    .bcb-form .bcb-form-input > span {
+    .bcb-form-input input {
+        position: absolute;
         display: block;
-        position: relative;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-    }
-
-    .bcb-form .bcb-form-input > input,
-    .bcb-form .bcb-form-input > .bpc-fake-select {
-        border: 1px solid #d2dae1;
-        color: #384554;
-        background-color: #fff;
         width: 100%;
-        margin-bottom: 10px;
-        line-height: 40px;
-        padding: 0 10px;
-        max-width: 100%;
-        font-family: "Inter var", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, sans-serif;
-    }
-
-    .bcb-form .bcb-form-input > input:focus {
+        height: 22px;
+        bottom: 0px;
+        left: 0px;
+        border: none;
         outline: none;
-        border-color: #00df91;
+        background-color: transparent;
+        font-size: 17px;
+        color: #3c3c3c;
+        z-index: 1;
+        padding: 0;
     }
 
-    .bcb-form .bcb-form-input select {
+    .bcb-form-input span {
+        position: absolute;
+        display: block;
+        height: auto;
+        top: 15px;
+        font-size: 17px;
+        color: #c9c9c9;
+        text-align: left;
+        white-space: nowrap;
+        cursor: text;
+        -webkit-transition: all 0.3s ease;
+        transition: all 0.3s ease;
+        z-index: 5;
+    }
+
+    .bcb-form-input input:not(:placeholder-shown) + span,
+    .bcb-form-input input:focus + span {
+        top: 0px;
+        font-size: 13px;
+    }
+
+    .bcb-form-input input ~ .highlight {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        background: #4bde95;
+        width: 100%;
+        max-width: 0%;
+        height: 1px;
+        transition: .5s;
+    }
+
+    .bcb-form-input input:focus ~ .highlight {
+        max-width: 100%;
+        transition: .5s;
+    }
+
+    .input-national, .input-installments { float: left; width: 49%; }
+    .input-installments { margin-left: 2%; }
+
+    .input-installments select {
         position: absolute;
         top: 0;
-        bottom: 0;
-        opacity: 0;
+        left: 0;
         width: 100%;
+        bottom: 0px;
+        opacity: 0;
+        z-index: 3;
+        cursor: pointer;
     }
 
-    .bcb-form .bcb-form-input select:focus + .bpc-fake-select {
-        border-color: #00df91;
+    .bpc-fake-select {
+        font-size: 17px;
+        color: #3c3c3c;
+        bottom: 0;
+        position: absolute;
+        left: 1px;
+        z-index: 1;
     }
-
-    .input-datev, .input-cv, .input-installments { float: left; width: 30%; }
-    .input-cv { margin: 0 2% }
-    .input-installments { width: 36% }
 
     .bcb-btn {
-        background: #00df91!important;
-        width: 100%;
-        text-align: center;
+        display: inline-block;
+        padding: 16px 80px;
+        max-width: 100%;
+        min-height: 50px;
+        font-family: 'sf-pro-text', Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: #fff;
+        background-color: #4bde95!important;
+        border: 2px solid #4bde95;
+        border-radius: 10px;
+        box-sizing: border-box;
+        cursor: pointer;
+        -webkit-transition: all 0.5s;
+        transition: all 0.5s;
+        text-transform: uppercase;
         color: #FFF;
+        margin: 0 auto;
+        display: block;
     }
 
     .bcb-btn:focus {
@@ -89,20 +141,39 @@
     .bcb-btn.bcb-btn-load::before {
         content: " ";
         position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 100%;
+        top: -3px;
+        left: -3px;
+        bottom: -3px;
+        right: -3px;
+        z-index: 1;
+        cursor: no-drop;
         background: rgba(255, 255, 255, 0.3);
+    }
+
+    .bcb-wrap {
+        min-width: 500px;
+        min-height: 300px;
+        background: #FFF;
+    }
+
+    .bcb-wrap > div {
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+        height: 100%;
+        max-width: 580px;
+        width: 100%;
+        margin: 0 auto;
     }
 
     .bcb-modal {
         position: fixed;
+        overflow: scroll;
         top: 0;
         bottom: 0;
         right: 0;
         left: 0;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.6);
         max-width: 100%!important;
         width: 100%!important;
         padding: 100px 50px 0;
@@ -122,26 +193,29 @@
         display: block;
     }
 
-    .bcb-modal-left > form,
-    .bcb-modal-right > form {
-        position: absolute;
+    .bcb-modal-left > div,
+    .bcb-modal-right > div {
+        position: fixed;
         top: 0;
+        left: 0;
         bottom: 0;
-        border-radius: 0px;
-        max-width: auto;
-        width: auto;
+        border-radius: 0;
     }
 
-    .bcb-modal-right > form {
+    .bcb-modal-left > div > .bcb-form,
+    .bcb-modal-right > div > .bcb-form {
+        height: 100%;
+    }
+
+    .bcb-modal-right > div {
         right: 0;
     }
 
-    .bcb-modal-left > form {
+    .bcb-modal-left > div {
         left: 0;
     }
 
-    .bcb-btn-block {
-        display: block;
+    .bcb-modal-open-cta {
         margin: 0 auto 25px;
     }
 
@@ -167,77 +241,105 @@
     .bcb-alert.show {
         display: block;
     }
+
+    .bcb-header {
+        background: #4bde95;
+        padding: 40px 90px;
+    }
+
+    .bcb-steps {
+        display: block;
+        text-align: right;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: #FFF;
+        font-size: 13px;
+        margin-bottom: 45px;
+    }
+
+    .bcb-title {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 20px;
+        color: #FFF;
+        font-weight: bold;
+        max-width: 300px;
+        margin: 0 auto;
+        display: flex;
+    }
+
+    .bcb-icon {
+        width: 50px;
+        height: 50px;
+    }
 </style>
 
-<?php $inputClass = 'bcb-form-input ' . bcb_get_style_prop('desc_class') ?>
+<?php $inputClass = 'bcb-form-input' ?>
 <?php $isModal = bcb_get_style_prop('modal_mode') == 'true' ?>
 <?php if ($isModal) { ?>
-    <button type="button" class="bcb-btn bcb-btn-block bcb-modal-open-cta">
+    <button type="button" class="bcb-btn bcb-modal-open-cta">
         <?= bcb_get_style_prop('cta_button') ?>
     </button>
 <?php } ?>
-<div class="<?= $isModal ? 'bcb-modal' : '' ?> <?= $isModal ? 'bcb-modal-' . bcb_get_style_prop('modal_position') : '' ?>">
-    <form class="bcb-form <?= bcb_get_style_prop('box_class') ?>">
-        <h3 class="bcb-form-title <?= bcb_get_style_prop('title_class') ?>">
-            <?= $payment->title ?>
-        </h3>
-        <div class="bcb-form-description <?= bcb_get_style_prop('desc_class') ?>">
-            <?= $payment->description ?>
-        </div>
-        <div class="bcb-alert">
-            Teste
-        </div>
-        <label class="<?= $inputClass ?>">
-            <span><?= bcb_get_style_prop('email_placeholder') ?></span>
-            <input required placeholder="<?= bcb_get_style_prop('email_placeholder') ?>" name="email" autocomplete="email" type="email">
-        </label>
-        <label class="<?= $inputClass ?>">
-            <span><?= bcb_get_style_prop('national_id_placeholder') ?></span>
-            <input required placeholder="<?= bcb_get_style_prop('national_id_placeholder') ?>" name="national-id" data-mask="^[0-9]\d{0,12}$" data-regex>
-        </label>
-        <label class="<?= $inputClass ?>">
-            <span><?= bcb_get_style_prop('cardnumber_placeholder') ?></span>
-            <input required placeholder="<?= bcb_get_style_prop('cardnumber_placeholder') ?>" name="cardnumber" autocomplete="cc-number" data-mask="0000 0000 0000 0000">
-        </label>
-        <label class="<?= $inputClass ?>">
-            <span><?= bcb_get_style_prop('name_placeholder') ?></span>
-            <input required placeholder="<?= bcb_get_style_prop('name_placeholder') ?>" name="ccname" autocomplete="cc-name">
-        </label>
-        <div class="bcb-row">
-            <label class="<?= $inputClass ?> input-datev">
-                <span><?= bcb_get_style_prop('exp_placeholder') ?></span>
-                <input required placeholder="<?= bcb_get_style_prop('exp_placeholder') ?>" name="cc-exp" autocomplete="cc-exp" data-mask="00/00" >
-            </label>
-            <label class="<?= $inputClass ?> input-cv">
-                <span><?= bcb_get_style_prop('cvv_placeholder') ?></span>
-                <input required placeholder="<?= bcb_get_style_prop('cvv_placeholder') ?>" name="cvc" autocomplete="cc-csc" data-mask="^[0-9]\d{0,3}$" data-regex>
-            </label>
-            <input type="hidden" name="value" value="<?= $payment->value ?>">
-            <label class="<?= $inputClass ?> input-installments">
-                <select name="installments">
-                    <?php
-                        foreach ($payment->installmentObj as $installment) { ?>
-                            <option value="<?=$installment['value']?>"><?=$installment['label']?></option>
-                        <?php }
-                    ?>
-                </select>
-                <div class="bpc-fake-select">
-                    <?= $payment->installmentObj[0]['label'] ?>
+<div class="bcb-wrap <?= $isModal ? 'bcb-modal' : '' ?> <?= $isModal ? 'bcb-modal-' . bcb_get_style_prop('modal_position') : '' ?>">
+    <div id="bcbStep1">
+        <div class="bcb-header">
+            <p class="bcb-steps">
+                <b>Etapa 1</b> de 3
+            </p>
+            <div class="bcb-title">
+                <div class="bcb-icon">
                 </div>
-            </label>
+                <div>
+                    Informe os dados do comprador
+                </div>
+            </div>
         </div>
-        <button type="submit" class="bcb-form-btn bcb-btn <?= bcb_get_style_prop('btn_class') ?>">
-            <?= bcb_get_style_prop('btn_text') ?>
-        </button>
-        <?php if ($isModal) { ?>
-            <button type="button" class="bcb-btn bcb-modal-close">
-                <?= bcb_get_style_prop('close_modal_button') ?>
+        <form class="bcb-form <?= bcb_get_style_prop('box_class') ?>">
+            <label class="<?= $inputClass ?>">
+                <input required placeholder=" " name="email" autocomplete="email" type="email">
+                <span><?= bcb_get_style_prop('email_placeholder') ?></span>
+                <div class="highlight"></div>
+            </label>
+            <label class="<?= $inputClass ?>">
+                <input required placeholder=" " name="name" autocomplete="name">
+                <span><?= bcb_get_style_prop('name_placeholder') ?></span>
+                <div class="highlight"></div>
+            </label>
+            <div class="bcb-row">
+                <label class="<?= $inputClass ?> input-national">
+                    <input required placeholder=" " name="national-id" data-mask="^[0-9]\d{0,12}$" data-regex>
+                    <span><?= bcb_get_style_prop('national_id_placeholder') ?></span>
+                    <div class="highlight"></div>
+                </label>
+                <input type="hidden" name="value" value="<?= $payment->value ?>">
+                <label class="<?= $inputClass ?> input-installments">
+                    <select name="installments">
+                        <?php
+                            foreach ($payment->installmentObj as $installment) { ?>
+                                <option value="<?=$installment['value']?>"><?=$installment['label']?></option>
+                            <?php }
+                        ?>
+                    </select>
+                    <div class="bpc-fake-select">
+                        <?= $payment->installmentObj[0]['label'] ?>
+                    </div>
+                </label>
+            </div>
+            <button type="submit" class="bcb-form-btn bcb-btn <?= bcb_get_style_prop('btn_class') ?>">
+                <?= bcb_get_style_prop('btn_text') ?>
             </button>
-        <?php } ?>
-    </form>
+        </form>
+    </div>
+    <div id="bcbStep2"></div>
+
+    <?php if ($isModal) { ?>
+        <button type="button" class="bcb-btn bcb-modal-close">
+            <?= bcb_get_style_prop('close_modal_button') ?>
+        </button>
+    <?php } ?>
 </div>
 
-<script src="https://unpkg.com/imask"></script>
+<script src="https://unpkg.com/imask" async></script>
+<script src="https://apis.bexs.com.br/v1/lib/checkout-bexs.js" async></script>
 <script>
     document.body.onload = function () {
         document.querySelectorAll('[data-mask]').forEach((el) => {
@@ -302,7 +404,19 @@
                 };
 
                 const onSuccess = (d) => {
-                    window.location.href = "<?= bcb_get_api_prop('redirect_url') ?>"
+                    document.getElementById('bcbStep1').style.display = 'none';
+                    window.CheckoutBexs(d.redirectURL, 'bcbStep2', {
+                        paymentSuccess: () => {
+                            window.location = "/payment/" + paymentID;
+                        },
+                        paymentFail: () => {console.log("Payment fail")},
+                        iframeFallback: () => {
+                            window.location = "/failed";
+                        },
+                        changeOrder: () => {
+                            window.location = "/";
+                        }
+                    });
                 }
 
                 const onFail = (d) => {

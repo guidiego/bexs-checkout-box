@@ -40,13 +40,6 @@ class BexsAPI {
         return $opts;
     }
 
-    function __get($path)
-    {
-        $opts = $this->__prepareHeader([]);
-        $response = wp_remote_get($this->baseUrl . $path, $opts);
-        return json_decode(wp_remote_retrieve_body($response), true);
-    }
-
     function __post($path, $data)
     {
         $opts = $this->__prepareHeader($data);
@@ -54,13 +47,13 @@ class BexsAPI {
         return json_decode(wp_remote_retrieve_body($response), true);
     }
 
-    function createPayment($value, $installments, $consumer, $creditCard)
+    function createPayment($value, $installments, $consumer)
     {
         $amountKind = bcb_get_api_prop('amount_kind');
         $amountKey = $amountKind == 'foreign' ? 'foreign_amount' : 'amount';
         $data = [
             'type' => 'CREDIT_CARD',
-            'card_info' => $creditCard,
+            'checkout' => true,
             'consumer' => $consumer,
             'installments' => (int) $installments,
             $amountKey => (float) $value,
