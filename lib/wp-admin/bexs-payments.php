@@ -1,5 +1,13 @@
 <?php
 
+add_filter( 'query_vars', 'bcb_query_params' );
+function bcb_query_params( $vars )
+{
+    $vars[] = "bcbPage";
+    $vars[] = "bcbQ";
+    return $vars;
+}
+
 function bcbCreateTable()
 {
     global $wpdb;
@@ -76,11 +84,52 @@ function bcbCompletePayment($id, $status) {
 function bexsPaymentPage()
 {
     global $wpdb;
+    global $wp;
+
     $dbName = $wpdb->prefix . 'bexs_payments';
-    $pageLimit = 20;
-    $pageSkip = 0;
-    $dbQuery = "SELECT * FROM $dbName LIMIT 10";
-    $rows = $wpdb->get_results($dbQuery);
+    $p = array_key_exists('p', $_GET) ? (int) $_GET['p'] : 1;
+    $pageLimit = 15;
+    $pageSkip = $pageLimit * ($p - 1);
+    $q = [];
+
+    $qst = "";
+    if (array_key_exists('qst', $_GET)) {
+        $qst = $_GET['qst'];
+        $q[] = "status = $qst";
+    }
+
+    $qstr = "";
+    if (array_key_exists('qstr', $_GET)) {
+        $qstr = $_GET['qstr'];
+        $qint = [];
+        $qint[] = "name LIKE '%$qstr%'";
+        $qint[] = "email LIKE '%$qstr%'";
+        $qint[] = "national_id LIKE '%$qstr%'";
+        $q[] = "( " . join(' OR ', $qint) . " )";
+    }
+
+    $qid = "";
+    $dbQuery = "SELECT * FROM $dbName";
+    $countQuery = "SELECT count(*) FROM $dbName";
+    $completeQuery = "";
+    $q1 = join(" AND ", $q);
+
+    if (array_key_exists('qid', $_GET)) {
+        $qid = $_GET['qid'];
+        $intQid = (int) $qid;
+        $q2 = "(id = $intQid" . ($q1 != "" ? " AND $q1" : "") . ")";
+        $q1 = "(bexs_id = '$qid'" . ($q1 != "" ? " AND $q1" : "") . ")";
+        $q1 .= " OR $q2";
+    }
+
+    if ($q1 != "") {
+        $completeQuery .= ' WHERE ' . $q1;
+    }
+
+    $count = $wpdb->get_var($countQuery . $completeQuery);
+    $completeQuery .= " LIMIT $pageSkip, $pageLimit;";
+    $pages = range(1, ceil($count / $pageLimit));
+    $rows = $wpdb->get_results($dbQuery . $completeQuery);
 
     ?>
         <style>
@@ -97,6 +146,7 @@ function bexsPaymentPage()
                 margin-top: 20px;
                 border-spacing: 0;
                 border-collapse: collapse;
+                width: 98%;
             }
 
             .bcb-table-wrap {
@@ -119,6 +169,55 @@ function bexsPaymentPage()
                 text-align: center;
                 white-space: nowrap;
             }
+
+            .bcb-pagination {
+                display: block;
+                margin: 20px auto;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            .bcb-pagination .bcb-page-item {
+                display: inline-block;
+                margin: 0 5px;
+                padding: 5px 12px;
+                border-radius: 5px;
+                background: #FFF;
+                box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+            }
+
+            .bcb-filter-box {
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+                color: #4a4a4a;
+                display: block;
+                padding: 1.25rem;
+                width: 98%;
+                margin: 20px 0;
+                max-width: 550px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .bcb-filter-box input,
+            .bcb-filter-box button {
+                padding: 5px;
+                max-height: 30px;
+            }
+
+            .bcb-wait {
+                color: #ffb200;
+            }
+
+            .bcb-ok {
+                color: #39ad0b;
+            }
+
+            .bcb-err {
+                color: #bd0707;
+            }
         </style>
     <?php if (count($rows) == 0) { ?>
         <div class="bcb-title">
@@ -126,8 +225,26 @@ function bexsPaymentPage()
         </div>
     <?php } else { ?>
         <div class="bcb-title">
-            <h1>Payment History</h1>
+            <h1>Payment History <small>(<?= $count ?> payments)</small></h1>
         </div>
+    <?php } ?>
+        <div class="bcb-filter-box">
+            <input placeholder="Consumer Data" name="bcbHistoryFilter-qstr" value="<?= $qstr ?>" />
+            <input placeholder="IDs" name="bcbHistoryFilter-qid" value="<?= $qid ?>"/>
+            <select name="bcbHistoryFilter-qst">
+                <option value=""> All </option>
+                <option value="0" <?php if ($qst == '0') { ?> selected <?php } ?>> Waiting </option>
+                <option value="1" <?php if ($qst == '1') { ?> selected <?php } ?> > Success </option>
+                <option value="2" <?php if ($qst == '2') { ?> selected <?php } ?>> Fail </option>
+            </select>
+            <button type="button" id="bcbPerformSearch">
+                Search
+            </button>
+            <button type="button" id="bcbPerformClear">
+                Clear
+            </button>
+        </div>
+    <?php if (count($rows) != 0) { ?>
         <div class="bcb-table-wrap">
             <table class="bcb-table">
                 <thead>
@@ -158,11 +275,72 @@ function bexsPaymentPage()
                             <td><?= $payment->email ?></td>
                             <td><?= $payment->name ?></td>
                             <td><?= $payment->national_id ?></td>
-                            <td><?= $payment->status ?></td>
+                            <td>
+                                <?php
+                                    if ($payment->status == 0) {
+                                        echo '<span class="bcb-wait dashicons dashicons-clock"></span>';
+                                    }
+
+                                    if ($payment->status == 1) {
+                                        echo '<span class="bcb-ok dashicons dashicons-yes"></span>';
+                                    }
+
+                                    if ($payment->status == 2) {
+                                        echo '<span class="bcb-err dashicons dashicons-no"></span>';
+                                    }
+                                ?>
+                            </td>
                         <tr>
                     <?php } ?>
                 </tbody>
             </table>
+            <?php
+                if (count($pages) > 1) {
+                    $pagination = '<ul class="bcb-pagination">';
+
+                    foreach ( $pages as $page ) {
+                        $pagination .= '<li class="bcb-page-item"><a href="' . add_query_arg('p', $page, get_permalink()) . ' ">' . $page . '</a></li>';
+                    }
+
+                    $pagination .= '</ul>';
+                    echo $pagination;
+                }
+            ?>
         </div>
+
+        <script>
+            document.body.onload = function () {
+                const getQueryParams = () => {
+                    return window.location.search
+                        .replace('?', '')
+                        .split('&')
+                        .map((val) => val.split('='))
+                        .reduce((a, b) => ({ ...a, [b[0]]: b[1]}), {});
+                }
+
+                const buildURL = (q) => window.location.protocol + '//' + window.location.host + window.location.pathname + '?' + q;
+
+                document.getElementById('bcbPerformSearch').addEventListener('click', function () {
+                    const data = {
+                        ...getQueryParams(),
+                        qstr: document.querySelector('[name="bcbHistoryFilter-qstr"]').value,
+                        qid: document.querySelector('[name="bcbHistoryFilter-qid"]').value,
+                        qst: document.querySelector('[name="bcbHistoryFilter-qst"]').value,
+                    };
+
+                    const qsParams = Object.keys(data)
+                        .filter((k) => data[k] !== '')
+                        .map((k) => `${k}=${data[k]}`)
+                        .join('&');
+
+                    window.location.href = buildURL(qsParams);
+                });
+
+                document.getElementById('bcbPerformClear').addEventListener('click', function () {
+                    const { page } = getQueryParams();
+                    window.location.href = buildURL(`page=${page}`);
+                });
+            }
+        </script>
     <?php }
 }
