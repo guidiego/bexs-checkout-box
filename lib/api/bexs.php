@@ -56,6 +56,7 @@ class BexsAPI {
             'checkout' => true,
             'consumer' => $consumer,
             'installments' => (int) $installments,
+            'confirm' => true,
             $amountKey => (float) $value,
         ];
 

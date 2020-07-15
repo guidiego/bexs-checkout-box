@@ -11,8 +11,7 @@
 
             $this->value = $value;
             $this->maxInstallments = (int) $attr['max_installments'];
-            $this->title = $attr['title'];
-            $this->description = $attr['description'];
+            $this->contractId = $attr['contract_id'];
             $this->installmentObj = $this->generateInstallments();
         }
 

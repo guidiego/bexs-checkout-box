@@ -298,6 +298,10 @@
     #bcbStep2, #bcbStep3 {
         display: none;
     }
+
+    .bcb-close-st3 {
+        margin-top: 30px;
+    }
 </style>
 
 <?php $inputClass = 'bcb-form-input' ?>
@@ -338,6 +342,7 @@
                     <div class="highlight"></div>
                 </label>
                 <input type="hidden" name="value" value="<?= $payment->value ?>">
+                <input type="hidden" name="contract_id" value="<?= $payment->contractId ?>">
                 <label class="<?= $inputClass ?> input-installments">
                     <select name="installments">
                         <?php
@@ -361,9 +366,9 @@
     </div>
     <div id="bcbStep3">
         <div class="bcb-final-alert">
-            Seu pagamento foi confirmado e está sendo processado! Obrigado pela preferencia!
-            <div class="bcb-btn bcb-modal-close">
-               Fechar
+            <?= bcb_get_style_prop('close_modal_success_message') ?>
+            <div class="bcb-btn bcb-modal-close bcb-close-st3">
+                <?= bcb_get_style_prop('close_modal_button') ?>
             </div>
         </div>
     </div>

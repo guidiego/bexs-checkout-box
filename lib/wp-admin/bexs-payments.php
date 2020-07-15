@@ -25,6 +25,7 @@ function bcbCreateTable()
         `bexs_id` varchar(100),
         `bexs_tax` varchar(25),
         `brl_value` varchar(25),
+        `contract_id` varchar(255),
         `installments` int,
         `foreign_value` varchar(25),
         `name` varchar(255),
@@ -56,6 +57,7 @@ function bcbInsertPaymentRegister($payment)
         'email' => $payment['email'],
         'national_id' => $payment['national-id'],
         'installments' => (int) $payment['installments'],
+        'contract_id' => $payment['contract_id'],
         'status' => 0,
         'tmstp' => (new DateTime('NOW'))->format('Y-m-d H:i:s'),
     ]);
@@ -68,8 +70,8 @@ function bcbUpdatePaymentRegister($id, $bexs) {
     $dbName = $wpdb->prefix . 'bexs_payments';
     $wpdb->update($dbName, [
         'bexs_id' => $bexs['id'],
-        'bexs_tax' => $bexs['amount_info']['financial_tax'],
-        'brl_value' => $bexs['amount_info']['gross_amount'],
+        'bexs_tax' => number_format($bexs['amount_info']['financial_tax'], 2, '.', ''),
+        'brl_value' => number_format($bexs['amount_info']['gross_amount'], 2, '.', ''),
         'foreign_value' => $bexs['amount_info']['foreign_gross_amount'],
     ], ['id' => $id]);
 }
@@ -96,6 +98,12 @@ function bexsPaymentPage()
     if (array_key_exists('qst', $_GET)) {
         $qst = $_GET['qst'];
         $q[] = "status = $qst";
+    }
+
+    $qctrc = "";
+    if (array_key_exists('qctrc', $_GET)) {
+        $qctrc = $_GET['qctrc'];
+        $q[] = "contract_id = '$qctrc'";
     }
 
     $qstr = "";
@@ -129,6 +137,7 @@ function bexsPaymentPage()
     $count = $wpdb->get_var($countQuery . $completeQuery);
     $completeQuery .= " LIMIT $pageSkip, $pageLimit;";
     $pages = range(1, ceil($count / $pageLimit));
+
     $rows = $wpdb->get_results($dbQuery . $completeQuery);
 
     ?>
@@ -195,7 +204,7 @@ function bexsPaymentPage()
                 padding: 1.25rem;
                 width: 98%;
                 margin: 20px 0;
-                max-width: 550px;
+                max-width: 700px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -231,6 +240,7 @@ function bexsPaymentPage()
         <div class="bcb-filter-box">
             <input placeholder="Consumer Data" name="bcbHistoryFilter-qstr" value="<?= $qstr ?>" />
             <input placeholder="IDs" name="bcbHistoryFilter-qid" value="<?= $qid ?>"/>
+            <input placeholder="Contract" name="bcbHistoryFilter-qctrc" value="<?= $qctrc ?>"/>
             <select name="bcbHistoryFilter-qst">
                 <option value=""> All </option>
                 <option value="0" <?php if ($qst == '0') { ?> selected <?php } ?>> Waiting </option>
@@ -249,7 +259,9 @@ function bexsPaymentPage()
             <table class="bcb-table">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>ID</th>
+                        <th>Contract ID</th>
                         <th>Timestamp</th>
                         <th>BexsID</th>
                         <th><?= bcb_get_api_prop('coin_kind') ?></th>
@@ -259,22 +271,11 @@ function bexsPaymentPage()
                         <th>Consumer Email</th>
                         <th>Consumer Name</th>
                         <th>National ID</th>
-                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($rows as $payment) { ?>
                         <tr>
-                            <td><?= $payment->id ?></td>
-                            <td><?= $payment->tmstp ?></td>
-                            <td><?= $payment->bexs_id == null ? '---' : $payment->bexs_id  ?></td>
-                            <td><?= $payment->foreign_value == null ? '---' : $payment->foreign_value  ?></td>
-                            <td><?= $payment->brl_value == null ? '---' : $payment->brl_value  ?></td>
-                            <td><?= $payment->bexs_tax == null ? '---' : $payment->bexs_tax  ?></td>
-                            <td><?= $payment->installments ?></td>
-                            <td><?= $payment->email ?></td>
-                            <td><?= $payment->name ?></td>
-                            <td><?= $payment->national_id ?></td>
                             <td>
                                 <?php
                                     if ($payment->status == 0) {
@@ -290,6 +291,17 @@ function bexsPaymentPage()
                                     }
                                 ?>
                             </td>
+                            <td><?= $payment->id ?></td>
+                            <td><?= $payment->contract_id ?></td>
+                            <td><?= $payment->tmstp ?></td>
+                            <td><?= $payment->bexs_id == null ? '---' : $payment->bexs_id  ?></td>
+                            <td><?= $payment->foreign_value == null ? '---' : $payment->foreign_value  ?></td>
+                            <td><?= $payment->brl_value == null ? '---' : $payment->brl_value  ?></td>
+                            <td><?= $payment->bexs_tax == null ? '---' : $payment->bexs_tax  ?></td>
+                            <td><?= $payment->installments ?></td>
+                            <td><?= $payment->email ?></td>
+                            <td><?= $payment->name ?></td>
+                            <td><?= $payment->national_id ?></td>
                         <tr>
                     <?php } ?>
                 </tbody>
@@ -326,6 +338,7 @@ function bexsPaymentPage()
                         qstr: document.querySelector('[name="bcbHistoryFilter-qstr"]').value,
                         qid: document.querySelector('[name="bcbHistoryFilter-qid"]').value,
                         qst: document.querySelector('[name="bcbHistoryFilter-qst"]').value,
+                        qctrc: document.querySelector('[name="bcbHistoryFilter-qctrc"]').value,
                     };
 
                     const qsParams = Object.keys(data)

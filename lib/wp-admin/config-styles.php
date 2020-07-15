@@ -22,6 +22,11 @@
                     'default' => 'Consumer information',
                 ],
                 [
+                    'name' => 'close_modal_success_message',
+                    'label' => 'Success message text',
+                    'default' => 'Thank you! Your payment has been confirmed and is being processed!',
+                ],
+                [
                     'name' => 'close_modal_button',
                     'label' => 'Success close button text',
                     'default' => 'Close',
